@@ -1,0 +1,36 @@
+digraph HardenedApp {
+	bgcolor=white
+	ec2 [label="EC2 Instance
+(Hardened Host)" fillcolor="#e1f5fe" shape=box3d style=filled]
+	docker [label="Docker Daemon
+(hardened daemon.json)" fillcolor="#b3e5fc" shape=component style=filled]
+	ec2 -> docker
+	frontend [label="frontend network" color=blue shape=ellipse style=dashed]
+	backend [label="backend network" color=green shape=ellipse style=dashed]
+	web [label="Web Container
+- USER: appuser
+- HEALTHCHECK
+- read_only: true
+- mem_limit: 256m
+- pids_limit: 100
+- no-new-privileges
+- Exposes: 127.0.0.1:15000->5000
+- .env for secrets
+" fillcolor="#fff9c4" shape=box style=filled]
+	db [label="DB Container (Postgres)
+- read_only: true
+- mem_limit: 512m
+- pids_limit: 100
+- no-new-privileges
+- .env for secrets
+" fillcolor="#c8e6c9" shape=box style=filled]
+	docker -> web
+	docker -> db
+	web -> frontend [label="connects to"]
+	db -> backend [label="connects to"]
+	sg [label="Security Group
+- SSH: restricted
+- No public app/db access
+" fillcolor="#ffcdd2" shape=note style=filled]
+	ec2 -> sg [style=dotted]
+}

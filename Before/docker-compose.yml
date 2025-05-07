@@ -1,0 +1,21 @@
+services:
+  web:
+    build: .
+    image: mywebapp
+    ports:
+      - "15000:5000"
+    depends_on:
+      - db
+    networks:
+      - frontend
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: mydb
+    networks:
+      - backend
+networks:
+  frontend:
+  backend:

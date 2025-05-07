@@ -1,0 +1,3 @@
+# Pin the only runtime dependency
+Flask==3.0.3
+
